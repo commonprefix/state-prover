@@ -1,9 +1,12 @@
 import { EthAPI } from './eth.js';
 import { toHexString } from '@chainsafe/ssz';
 import express from 'express'
+import cors from 'cors'
 
 const app = express()
 const port = 3000
+
+app.use(cors())
 
 const ethAPI = new EthAPI()
 
