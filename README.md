@@ -1,6 +1,6 @@
 # Lodestar prover
 
-Lodestar Prover is a simple wrapper for the `eth/v0/beacon/proof/state/` endpoint of Lodestar. It exposes an API endpoint called `/state_proof`, which can be used to obtain Merkle proofs for specific elements in the Ethereum state, identified by their generalized index (gindex) and state ID (state_id).
+The state_prover is a simple wrapper for the `eth/v0/beacon/proof/state/` endpoint of Lodestar. It exposes an API endpoint called `/state_proof`, which can be used to obtain Merkle proofs for specific elements in the Ethereum state, identified by their generalized index (gindex) and state ID (state_id).
 
 ## Setup
 
