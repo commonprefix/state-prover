@@ -29,10 +29,17 @@ export class EthAPI {
         return proof
     }
 
-    async getBlockProof(blockRoot: string, gIndex: any) {
+    async getBlockProof(blockRoot: string, gIndex: any): Promise<SingleProof> {
         const descriptor = computeDescriptor([gIndex])
         const res = await this.consensus.proof.getBlockProof(blockRoot, descriptor)
-        return res.response?.data as Proof
+
+        const tree = Tree.createFromProof(res.response?.data as CompactMultiProof);
+        const proof: SingleProof = tree.getProof({
+            type: ProofType.single,
+            gindex: gIndex,
+        }) as SingleProof;
+
+        return proof
     }
   
     async getBeaconBlock(slot: number | string): Promise<capella.BeaconBlock> {
