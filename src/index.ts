@@ -11,8 +11,8 @@ app.use(cors())
 
 let ethAPIs: {[network: string]: EthAPI} = {};
 let config = getConfig();
-for (let [network, beaconUrl] of Object.entries(config)) {
-	ethAPIs[network] = new EthAPI(beaconUrl)
+for (let [network, beaconUrl] of Object.entries(config.beaconUrls)) {
+	ethAPIs[network] = new EthAPI(beaconUrl as string)
 }
 
 app.get('/state_proof', async (req: express.Request, res: express.Response) => {

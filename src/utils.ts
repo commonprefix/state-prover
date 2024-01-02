@@ -1,11 +1,9 @@
 import "dotenv/config"
 import * as capella from '@lodestar/types/capella'
 import { readFileSync } from 'fs';
-import { join } from 'path';
 
-export const getConfig = (): string => {
-    let path = join(__dirname, '..', 'config.json');
-    let file = readFileSync(path, 'utf8');
+export const getConfig = (): {[key: string]: any} => {
+    let file = readFileSync("./config.json", 'utf8');
     let config = JSON.parse(file);
 
     console.info("Loaded config", config)
