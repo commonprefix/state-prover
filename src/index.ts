@@ -11,7 +11,7 @@ app.use(cors())
 
 const ethAPI = new EthAPI()
 
-app.get('/state_proof', async (req, res: express.Response) => {
+app.get('/state_proof', async (req: express.Request, res: express.Response) => {
 	let stateId = req.query.state_id
 
 	if (stateId === undefined) {
@@ -43,7 +43,7 @@ app.get('/block_proof', async (req, res: express.Response) => {
 	}
 
 	try {
-		const gindex = getGindexFromQueryParams('body', req.query)
+		const gindex = getGindexFromQueryParams('block', req.query)
 		const proof = await ethAPI.getBlockProof(blockId as string, Number(gindex))
 
 		const serializedProof = {

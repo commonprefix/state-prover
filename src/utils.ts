@@ -25,7 +25,7 @@ export const parsePath = (path: string): (string | number)[] => {
 }
 
 export const getGindexFromQueryParams = (
-    pathResolution: 'body' | 'state',
+    pathResolution: 'block' | 'state',
     queryParams: Record<string, any>
 ): number | null => {
     const { gindex: rawGindex, path } = queryParams;
@@ -41,7 +41,7 @@ export const getGindexFromQueryParams = (
     const resolveGindexFromPath = (path: string): number => {
         const parsedPath = parsePath(path);
         try {
-            return pathResolution === 'body'
+            return pathResolution === 'block'
                 ? Number(capella.ssz.BeaconBlock.getPathInfo(parsedPath).gindex)
                 : Number(capella.ssz.BeaconState.getPathInfo(parsedPath).gindex);
         } catch (error) {
