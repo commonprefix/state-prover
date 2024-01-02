@@ -2,17 +2,22 @@ import { EthAPI } from './eth.js'
 import { toHexString } from '@chainsafe/ssz'
 import express from 'express'
 import cors from 'cors'
-import { getGindexFromQueryParams } from './utils.js'
+import { getConfig, getEnv, getGindexFromQueryParams } from './utils.js'
 
 const app = express()
-const port = 3000
+const port = +getEnv("PORT", "3000")
 
 app.use(cors())
 
-const ethAPI = new EthAPI()
+let ethAPIs: {[network: string]: EthAPI} = {};
+let config = getConfig();
+for (let [network, beaconUrl] of Object.entries(config)) {
+	ethAPIs[network] = new EthAPI(beaconUrl)
+}
 
 app.get('/state_proof', async (req: express.Request, res: express.Response) => {
 	let stateId = req.query.state_id
+	let network = req.query.network ? req.query.network as string : 'mainnet'
 
 	if (stateId === undefined) {
 		return res.status(400).send('Missing state_id')
@@ -20,7 +25,7 @@ app.get('/state_proof', async (req: express.Request, res: express.Response) => {
 
 	try {
 		const gindex = getGindexFromQueryParams('state', req.query)
-		const proof = await ethAPI.getStateProof(stateId as string, Number(gindex))
+		const proof = await ethAPIs[network].getStateProof(stateId as string, Number(gindex))
 
 		const serializedProof = {
 			...proof,
@@ -37,6 +42,7 @@ app.get('/state_proof', async (req: express.Request, res: express.Response) => {
 
 app.get('/block_proof', async (req, res: express.Response) => {
 	let blockId = req.query.block_id
+	let network = req.query.network ? req.query.network as string : 'mainnet'
 
 	if (blockId === undefined) {
 		return res.status(400).send('Missing block_id')
@@ -44,7 +50,7 @@ app.get('/block_proof', async (req, res: express.Response) => {
 
 	try {
 		const gindex = getGindexFromQueryParams('block', req.query)
-		const proof = await ethAPI.getBlockProof(blockId as string, Number(gindex))
+		const proof = await ethAPIs[network].getBlockProof(blockId as string, Number(gindex))
 
 		const serializedProof = {
 			...proof,

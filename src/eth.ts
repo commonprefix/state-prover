@@ -1,4 +1,3 @@
-import { getEnv } from "./utils.js";
 import { phase0 } from "@lodestar/types"
 import * as capella from "@lodestar/types/capella"
 import { Api, getClient } from "@lodestar/api";
@@ -9,7 +8,7 @@ import {CompactMultiProof, Proof, ProofType, SingleProof, Tree, computeDescripto
 export class EthAPI {
     private consensus: Api
 
-    constructor(beaconURL = getEnv("BEACON_API")) {
+    constructor(beaconURL: string) {
         this.consensus = getClient({ baseUrl: beaconURL }, {config})
     }
 

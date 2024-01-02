@@ -1,5 +1,17 @@
 import "dotenv/config"
 import * as capella from '@lodestar/types/capella'
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+export const getConfig = (): string => {
+    let path = join(__dirname, '..', 'config.json');
+    let file = readFileSync(path, 'utf8');
+    let config = JSON.parse(file);
+
+    console.info("Loaded config", config)
+    return config
+}
+
 
 export const getEnv = (key: string, defaultValue ?: string): string => {
 	if (!process.env[key] && !defaultValue) {
@@ -9,6 +21,7 @@ export const getEnv = (key: string, defaultValue ?: string): string => {
 	// @ts-ignore
 	return process.env[key] || defaultValue
 }
+
 
 export const parseGindex = (gindex?: string): Number | null => {
 	console.log(gindex, Number(gindex), Number.isNaN(Number(gindex)))
