@@ -1,9 +1,10 @@
 import { phase0 } from "@lodestar/types"
 import * as capella from "@lodestar/types/capella"
-import { Api, getClient } from "@lodestar/api";
+import { Api, ApiClientErrorResponse, HttpStatusCode, getClient } from "@lodestar/api";
 import { config } from "@lodestar/config/default";
 import { BeaconBlockHeader } from '@lodestar/types/lib/phase0/types.js';
 import {CompactMultiProof, Proof, ProofType, SingleProof, Tree, computeDescriptor, deserializeProof, gindexChild, serializeProof} from "@chainsafe/persistent-merkle-tree";
+import { LodestarError } from "./errors.js";
 
 export class EthAPI {
     private consensus: Api
@@ -16,7 +17,7 @@ export class EthAPI {
         const descriptor = computeDescriptor([gIndex])
         const res = await this.consensus.proof.getStateProof(stateId, descriptor)
         if (res.error) {
-            throw new Error(res.error.message)
+            throw new LodestarError(res.error)
         }
 
         const tree = Tree.createFromProof(res.response?.data as CompactMultiProof);
@@ -31,6 +32,9 @@ export class EthAPI {
     async getBlockProof(blockRoot: string, gIndex: any): Promise<SingleProof> {
         const descriptor = computeDescriptor([gIndex])
         const res = await this.consensus.proof.getBlockProof(blockRoot, descriptor)
+        if (res.error) {
+            throw new LodestarError(res.error)
+        }
 
         const tree = Tree.createFromProof(res.response?.data as CompactMultiProof);
         const proof: SingleProof = tree.getProof({

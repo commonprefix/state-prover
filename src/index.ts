@@ -1,4 +1,5 @@
 import { EthAPI } from './eth.js'
+import { LodestarError } from './errors.js'
 import { toHexString } from '@chainsafe/ssz'
 import express from 'express'
 import cors from 'cors'
@@ -35,8 +36,9 @@ app.get('/state_proof', async (req: express.Request, res: express.Response) => {
 
 		return res.json(serializedProof)
 	}
-	catch (e) {
-		return res.status(400).send(e.message)
+	catch (e: any) {
+		let code = 'code' in e ? e.code : 500
+		return res.status(code).send(e.message)
 	}
 })
 
@@ -60,8 +62,9 @@ app.get('/block_proof', async (req, res: express.Response) => {
 
 		return res.json(serializedProof)
 	}
-	catch (e) {
-		return res.status(400).send(e.message)
+	catch (e: any) {
+		let code = 'code' in e ? e.code : 500
+		return res.status(code).send(e.message)
 	}
 })
 
