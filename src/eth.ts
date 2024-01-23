@@ -1,10 +1,11 @@
-import { phase0 } from "@lodestar/types"
-import * as capella from "@lodestar/types/capella"
+import { allForks, phase0 } from "@lodestar/types"
+import * as deneb from "@lodestar/types/deneb"
 import { Api, ApiClientErrorResponse, HttpStatusCode, getClient } from "@lodestar/api";
 import { config } from "@lodestar/config/default";
 import { BeaconBlockHeader } from '@lodestar/types/lib/phase0/types.js';
 import {CompactMultiProof, Proof, ProofType, SingleProof, Tree, computeDescriptor, deserializeProof, gindexChild, serializeProof} from "@chainsafe/persistent-merkle-tree";
 import { LodestarError } from "./errors.js";
+import { state } from "@lodestar/api/lib/beacon/routes/beacon/index.js";
 
 export class EthAPI {
     private consensus: Api
@@ -44,34 +45,14 @@ export class EthAPI {
 
         return proof
     }
-  
-    async getBeaconBlock(slot: number | string): Promise<capella.BeaconBlock> {
-        const res = await this.consensus.beacon.getBlockV2(slot)
+
+    async getState(stateId: string): Promise<deneb.BeaconState> {
+        const res = await this.consensus.debug.getStateV2(stateId);
         if (res.error) {
             console.error(res.error)
-            throw new Error(`Error fetching or parsing block data.`)
+            throw new Error("Error fetching state")
         }
-
-        return res.response.data.message as capella.BeaconBlock
-    }
-
-    async getBeaconBlockHeader(slot: number | string): Promise<phase0.BeaconBlockHeader> {
-        const res = await this.consensus.beacon.getBlockHeader(slot)
-        if (res.error) {
-            console.error(res.error)
-            throw new Error(`Error fetching or parsing block header data.`)
-        }
-
-        return res.response.data.header.message
-    }
-
-    toBlockHeader(block: capella.BeaconBlock): BeaconBlockHeader {
-        return {
-            slot: block.slot,
-            proposerIndex: block.proposerIndex,
-            parentRoot: block.parentRoot,
-            stateRoot: block.stateRoot,
-            bodyRoot: capella.ssz.BeaconBlockBody.hashTreeRoot(block.body),
-          };
+ 
+        return res.response.data as deneb.BeaconState
     }
 }

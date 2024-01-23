@@ -1,5 +1,5 @@
 import "dotenv/config"
-import * as capella from '@lodestar/types/capella'
+import * as deneb from '@lodestar/types/deneb'
 import { readFileSync } from 'fs';
 
 export const getConfig = (): {[key: string]: any} => {
@@ -40,6 +40,7 @@ export const getGindexFromQueryParams = (
     queryParams: Record<string, any>
 ): number | null => {
     const { gindex: rawGindex, path } = queryParams;
+    console.log("PATH", path);
 
     const validateGindex = (gindex: any): number => {
         const parsedGindex = Number(gindex);
@@ -53,8 +54,8 @@ export const getGindexFromQueryParams = (
         const parsedPath = parsePath(path);
         try {
             return pathResolution === 'block'
-                ? Number(capella.ssz.BeaconBlock.getPathInfo(parsedPath).gindex)
-                : Number(capella.ssz.BeaconState.getPathInfo(parsedPath).gindex);
+                ? Number(deneb.ssz.BeaconBlock.getPathInfo(parsedPath).gindex)
+                : Number(deneb.ssz.BeaconState.getPathInfo(parsedPath).gindex);
         } catch (error) {
             throw new Error('Could not resolve path to gindex');
         }
