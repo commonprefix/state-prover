@@ -1,15 +1,13 @@
 import { EthAPI } from './eth.js'
-import { LodestarError } from './errors.js'
 import { toHexString } from '@chainsafe/ssz'
 import express from 'express'
 import cors from 'cors'
 import { getConfig, getGindexFromQueryParams } from './utils.js'
 
-const CONFIG = getConfig();
-const PORT = CONFIG.port as number;
+const { port, beaconUrls } = getConfig();
 
 let ethAPIs: {[network: string]: EthAPI} = {};
-for (let [network, beaconUrl] of Object.entries(CONFIG.beaconUrls)) {
+for (let [network, beaconUrl] of Object.entries(beaconUrls)) {
 	ethAPIs[network] = new EthAPI(beaconUrl as string)
 }
 
@@ -89,6 +87,7 @@ app.get('/block_proof', async (req, res: express.Response) => {
 	}
 })
 
-app.listen(PORT, () => {
-	console.log(`Magic is happening at http://localhost:${PORT}`)
+app.listen(port, () => {
+	console.log(`Magic is happening at http://localhost:${port}`)
 })
+

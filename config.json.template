@@ -1,8 +1,0 @@
-{
-    "beaconUrls": {
-        "mainnet": "http://lodestar-mainnet.chainsafe.io",
-        "goerli": "http://lodestar-goerli.chainsafe.io",
-        "sepolia": "http://lodestar-sepolia.chainsafe.io"
-    },
-    "port": 3000
-}

@@ -1,13 +1,27 @@
 import "dotenv/config"
 import * as deneb from '@lodestar/types/deneb'
-import { readFileSync } from 'fs';
 
-export const getConfig = (): {[key: string]: any} => {
-    let file = readFileSync("./config.json", 'utf8');
-    let config = JSON.parse(file);
+export function getConfig(): { port: number, beaconUrls: {[network: string]: string}} {
+    let port = +getEnv("PORT", "3000")
 
-    console.info("Loaded config", config)
+    let beaconUrls: {[network: string]: string;} = {};
+    for (let network of ["GOERLI", "SEPOLIA", "MAINNET"]) {
+        let beaconURL = getEnv(`${network}_BEACON_API`)
+        if (beaconURL) beaconUrls[network] = beaconURL
+    }
+
+    const config = { port, beaconUrls }
+    console.log("Loaded config", config)
     return config
+}
+
+export const getEnv = (key: string, defaultValue ?: string): string => {
+    if (!process.env[key] && !defaultValue) {
+        throw new Error(`Environment variable ${key} not set`)
+    }
+
+    // @ts-ignore
+    return process.env[key] || defaultValue
 }
 
 export const parseGindex = (gindex?: string): Number | null => {
