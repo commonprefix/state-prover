@@ -10,17 +10,6 @@ export const getConfig = (): {[key: string]: any} => {
     return config
 }
 
-
-export const getEnv = (key: string, defaultValue ?: string): string => {
-	if (!process.env[key] && !defaultValue) {
-		throw new Error(`Environment variable ${key} not set`)
-	}
-
-	// @ts-ignore
-	return process.env[key] || defaultValue
-}
-
-
 export const parseGindex = (gindex?: string): Number | null => {
 	console.log(gindex, Number(gindex), Number.isNaN(Number(gindex)))
 	return gindex === undefined || Number.isNaN(Number(gindex))

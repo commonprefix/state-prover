@@ -3,18 +3,18 @@ import { LodestarError } from './errors.js'
 import { toHexString } from '@chainsafe/ssz'
 import express from 'express'
 import cors from 'cors'
-import { getConfig, getEnv, getGindexFromQueryParams } from './utils.js'
+import { getConfig, getGindexFromQueryParams } from './utils.js'
 
-const app = express()
-const port = +getEnv("PORT", "3000")
-
-app.use(cors())
+const CONFIG = getConfig();
+const PORT = CONFIG.port as number;
 
 let ethAPIs: {[network: string]: EthAPI} = {};
-let config = getConfig();
-for (let [network, beaconUrl] of Object.entries(config.beaconUrls)) {
+for (let [network, beaconUrl] of Object.entries(CONFIG.beaconUrls)) {
 	ethAPIs[network] = new EthAPI(beaconUrl as string)
 }
+
+const app = express()
+app.use(cors())
 
 app.get('/state_proof', async (req: express.Request, res: express.Response) => {
 	let stateId = req.query.state_id
@@ -89,6 +89,6 @@ app.get('/block_proof', async (req, res: express.Response) => {
 	}
 })
 
-app.listen(port, () => {
-	console.log(`Magic is happening at http://localhost:${port}`)
+app.listen(PORT, () => {
+	console.log(`Magic is happening at http://localhost:${PORT}`)
 })
