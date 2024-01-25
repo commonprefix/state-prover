@@ -4,7 +4,7 @@ The state_prover is a simple wrapper for the proof endpoints of Lodestar. The Lo
 
 ## Setup
 
-- Copy `config.json.template` to `config.json` and populate it with your lodestar API URL.
+- Copy `.env.template` to `.env` and populate it with your lodestar API URLs.
 - Run `yarn` to install necessary dependencies.
 - Execute `yarn serve` to start the server.
 
