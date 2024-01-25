@@ -5,8 +5,8 @@ export function getConfig(): { port: number, beaconUrls: {[network: string]: str
     let port = +getEnv("PORT", "3000")
 
     let beaconUrls: {[network: string]: string;} = {};
-    for (let network of ["GOERLI", "SEPOLIA", "MAINNET"]) {
-        let beaconURL = getEnv(`${network}_BEACON_API`)
+    for (let network of ["goerli", "sepolia", "mainnet"]) {
+        let beaconURL = getEnv(`${network.toUpperCase()}_BEACON_API`)
         if (beaconURL) beaconUrls[network] = beaconURL
     }
 
