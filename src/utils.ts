@@ -1,14 +1,17 @@
 import "dotenv/config"
-import * as deneb from '@lodestar/types/deneb'
+import { NETWORK } from "./eth";
+import { ForkName } from "@lodestar/params";
+import { ssz } from "@lodestar/types"
 
-export function getConfig(): { port: number, beaconUrls: {[network: string]: string}} {
+export const supportedNetworks: NETWORK[] = ["goerli", "sepolia", "mainnet"];
+
+export function getConfig(): { port: number, beaconUrls: {[key in NETWORK]: string | null}} {
     let port = +getEnv("PORT", "3000")
 
-    let beaconUrls: {[network: string]: string;} = {};
-    for (let network of ["goerli", "sepolia", "mainnet"]) {
-        let beaconURL = getEnv(`${network.toUpperCase()}_BEACON_API`)
-        if (beaconURL) beaconUrls[network] = beaconURL
-    }
+    const beaconUrls: {[key in NETWORK]: string} = supportedNetworks.reduce((acc, network) => {
+        acc[network] = getEnv(`${network.toUpperCase()}_BEACON_API`);
+        return acc;
+    }, {} as {[key in NETWORK]: string});
 
     const config = { port, beaconUrls }
     console.log("Loaded config", config)
@@ -40,7 +43,8 @@ export const parsePath = (path: string): (string | number)[] => {
 
 export const getGindexFromQueryParams = (
     pathResolution: 'block' | 'state',
-    queryParams: Record<string, any>
+    queryParams: Record<string, any>,
+    forkName: ForkName
 ): number | null => {
     const { gindex: rawGindex, path } = queryParams;
     console.log("PATH", path);
@@ -57,8 +61,8 @@ export const getGindexFromQueryParams = (
         const parsedPath = parsePath(path);
         try {
             return pathResolution === 'block'
-                ? Number(deneb.ssz.BeaconBlock.getPathInfo(parsedPath).gindex)
-                : Number(deneb.ssz.BeaconState.getPathInfo(parsedPath).gindex);
+                ? Number(ssz.allForks[ForkName[forkName]].BeaconBlock.getPathInfo(parsedPath).gindex)
+                : Number(ssz.allForks[ForkName[forkName]].BeaconState.getPathInfo(parsedPath).gindex);
         } catch (error) {
             throw new Error('Could not resolve path to gindex');
         }
