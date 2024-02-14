@@ -14,6 +14,7 @@
     "@chainsafe/persistent-merkle-tree": "^0.6.1",
     "@lodestar/api": "^1.11.3",
     "@lodestar/config": "^1.11.3",
+    "@lodestar/params": "^1.15.1",
     "@lodestar/types": "^1.11.3",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
