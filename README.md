@@ -25,7 +25,7 @@ GET /block_proof?block_id=<block_identifier>&[path=<merkle_path>|gindex=<gindex>
 
 ```bash
  $ curl 'localhost:3000/block_proof?block_id=0x3684981bfe46f...&gindex=24332'
- $ curl 'localhost:3000/block_proof?block_id=head&path=body,execution_payload,transaction,32'
+ $ curl 'localhost:3000/block_proof?block_id=head&path=body,execution_payload,transactions,32'
 ```
 
 #### Example response
