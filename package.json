@@ -5,17 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "ts-node src/index.ts"
+    "serve": "node --loader ts-node/esm src/index.ts"
   },
   "type": "module",
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@chainsafe/persistent-merkle-tree": "^0.6.1",
-    "@lodestar/api": "^1.11.3",
-    "@lodestar/config": "^1.11.3",
-    "@lodestar/params": "^1.15.1",
-    "@lodestar/types": "^1.11.3",
+    "@chainsafe/persistent-merkle-tree": "^0.8.0",
+    "@lodestar/api": "^1.23.1",
+    "@lodestar/config": "^1.23.1",
+    "@lodestar/params": "^1.23.1",
+    "@lodestar/types": "^1.23.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2"

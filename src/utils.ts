@@ -1,9 +1,9 @@
 import "dotenv/config"
 import { NETWORK } from "./eth";
 import { ForkName } from "@lodestar/params";
-import { ssz } from "@lodestar/types"
+import { sszTypesFor } from "@lodestar/types"
 
-export const supportedNetworks: NETWORK[] = ["goerli", "sepolia", "mainnet"];
+export const supportedNetworks: NETWORK[] = ["holesky", "sepolia", "mainnet"];
 
 export function getConfig(): { port: number, beaconUrls: {[key in NETWORK]: string | null}} {
     let port = +getEnv("PORT", "3000")
@@ -61,8 +61,8 @@ export const getGindexFromQueryParams = (
         const parsedPath = parsePath(path);
         try {
             return pathResolution === 'block'
-                ? Number(ssz.allForks[ForkName[forkName]].BeaconBlock.getPathInfo(parsedPath).gindex)
-                : Number(ssz.allForks[ForkName[forkName]].BeaconState.getPathInfo(parsedPath).gindex);
+                ? Number(sszTypesFor(forkName).BeaconBlock.getPathInfo(parsedPath).gindex)
+                : Number(sszTypesFor(forkName).BeaconState.getPathInfo(parsedPath).gindex);
         } catch (error) {
             throw new Error('Could not resolve path to gindex');
         }
